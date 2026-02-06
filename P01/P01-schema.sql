@@ -110,7 +110,4 @@ CREATE TABLE IF NOT EXISTS Rider_Exit (
 
     CONSTRAINT fk_stage 
         FOREIGN KEY (stage) REFERENCES Stage (stage_no) ON UPDATE CASCADE
-    ,
-    CONSTRAINT fk_rider 
-        FOREIGN KEY (rider) REFERENCES Rider (bib) ON UPDATE CASCADE
 );

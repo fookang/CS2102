@@ -140,9 +140,9 @@ def write_riders_exits_data(file, data_exit, data):
     processed = data_exit[['bib', 'stage', 'reason'
                            ]].drop_duplicates().reset_index(drop=True)
 
-    dropped = processed[~processed['bib'].isin(data['bib'])]
-    processed = processed[processed['bib'].isin(data['bib'])]
-    print("Dropped bibs:", dropped['bib'].tolist())
+    # dropped = processed[~processed['bib'].isin(data['bib'])]
+    # processed = processed[processed['bib'].isin(data['bib'])]
+    # print("Dropped bibs:", dropped['bib'].tolist())
 
     with open(file, 'a') as f:
         f.write("-- Insert Rider_Exit Data\n")
@@ -157,7 +157,8 @@ if __name__ == "__main__":
 
     stage_1_data = data[data['stage'] == 1]
     data_exit = read_csv('tdf-exits.csv')
-
+    stage_1_exit = data_exit[data_exit['stage'] == 1]
+    
     data = stage_1_data
     clean(OUTPUT_FILE)
     write_region_data(OUTPUT_FILE, data)
@@ -167,4 +168,4 @@ if __name__ == "__main__":
     write_location_data(OUTPUT_FILE, data)
     write_stage_data(OUTPUT_FILE, data)
     write_riders_results_data(OUTPUT_FILE, data)
-    write_riders_exits_data(OUTPUT_FILE, data_exit, data)
+    write_riders_exits_data(OUTPUT_FILE, stage_1_exit, data)

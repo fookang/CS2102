@@ -444,27 +444,7 @@ INSERT INTO Result VALUES (1, 55, '14542', 0, 0, 182);
 
 
 -- Insert Rider_Exit Data
-INSERT INTO Rider_Exit VALUES (163, 14, 'DNS');
-INSERT INTO Rider_Exit VALUES (66, 18, 'DNS');
-INSERT INTO Rider_Exit VALUES (173, 12, 'DNS');
-INSERT INTO Rider_Exit VALUES (93, 18, 'DNS');
-INSERT INTO Rider_Exit VALUES (77, 17, 'DNS');
-INSERT INTO Rider_Exit VALUES (122, 8, 'withdrawal');
-INSERT INTO Rider_Exit VALUES (185, 5, 'DNS');
-INSERT INTO Rider_Exit VALUES (141, 18, 'withdrawal');
-INSERT INTO Rider_Exit VALUES (48, 10, 'DNS');
-INSERT INTO Rider_Exit VALUES (54, 7, 'withdrawal');
-INSERT INTO Rider_Exit VALUES (213, 5, 'DNS');
-INSERT INTO Rider_Exit VALUES (101, 3, 'withdrawal');
-INSERT INTO Rider_Exit VALUES (2, 9, 'withdrawal');
-INSERT INTO Rider_Exit VALUES (217, 15, 'DNS');
-INSERT INTO Rider_Exit VALUES (38, 10, 'DNS');
-INSERT INTO Rider_Exit VALUES (106, 16, 'DNS');
-INSERT INTO Rider_Exit VALUES (22, 7, 'withdrawal');
-INSERT INTO Rider_Exit VALUES (85, 14, 'withdrawal');
-INSERT INTO Rider_Exit VALUES (21, 14, 'withdrawal');
-INSERT INTO Rider_Exit VALUES (228, 10, 'withdrawal');
-INSERT INTO Rider_Exit VALUES (181, 14, 'withdrawal');
-INSERT INTO Rider_Exit VALUES (175, 20, 'DNS');
+INSERT INTO Rider_Exit VALUES (64, 1, 'withdrawal');
+INSERT INTO Rider_Exit VALUES (154, 1, 'withdrawal');
 
 
