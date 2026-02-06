@@ -1,3 +1,12 @@
+--
+-- Group Number: 64
+-- Group Members: 
+--   1. Bharathimohan Kaviyan
+--   2. Emry Daniel Bin Abdul Lathiff
+--   3. Foo Kang
+--   4. Mohamed Faras S/O Faridul Huk
+--
+
 -- Insert Regions Data
 INSERT INTO Region VALUES ('Europe');
 INSERT INTO Region VALUES ('Africa');
