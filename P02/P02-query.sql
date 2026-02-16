@@ -4082,3 +4082,15 @@ INSERT INTO Rider_Exit VALUES (228, 10, 'withdrawal');
 INSERT INTO Rider_Exit VALUES (181, 14, 'withdrawal');
 INSERT INTO Rider_Exit VALUES (175, 20, 'DNS');
 
+
+
+SELECT r.name, (res.time - res.penalty + res.bonus) as time
+FROM Result res
+JOIN Rider r ON r.bib = res.bib
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM Rider_Exit re
+    WHERE re.rider = res.bib
+)
+ORDER BY time ASC
+LIMIT 1;
