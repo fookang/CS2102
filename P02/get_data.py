@@ -111,6 +111,15 @@ def write_location_data(file, data):
         f.write("\n\n")
 
 
+def write_stage_type(file, data):
+    types = data['type'].drop_duplicates().reset_index(drop=True)
+    with open(file, 'a') as f:
+        f.write("-- Insert Stage Types Data\n")
+        for t in types:
+            f.write(f"INSERT INTO Stage_Type VALUES ('{t}');\n")
+        f.write("\n\n")
+
+
 def write_stage_data(file, data):
     stages = data[['stage', 'day', 'start_location', 'finish_location', 'length', 'type'
                    ]].drop_duplicates().reset_index(drop=True)
@@ -155,14 +164,14 @@ def write_riders_exits_data(file, data_exit, data):
 if __name__ == "__main__":
     data = read_csv('tdf-2025.csv')
     data_exit = read_csv('tdf-exits.csv')
-    
+
     clean(OUTPUT_FILE)
     write_region_data(OUTPUT_FILE, data)
     write_country_data(OUTPUT_FILE, data)
     write_team_data(OUTPUT_FILE, data)
     write_rider_data(OUTPUT_FILE, data)
     write_location_data(OUTPUT_FILE, data)
+    write_stage_type(OUTPUT_FILE, data)
     write_stage_data(OUTPUT_FILE, data)
     write_riders_results_data(OUTPUT_FILE, data)
     write_riders_exits_data(OUTPUT_FILE, data_exit, data)
-
