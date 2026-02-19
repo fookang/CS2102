@@ -89,7 +89,30 @@ def write_rider_data(file, data):
         f.write("-- Insert Riders Data\n")
         for rider in riders.itertuples(index=False):
             f.write(
-                f"INSERT INTO Rider VALUES ({rider.bib}, {as_str(rider.rider)}, {as_str(rider.dob)}, {as_str(rider.team)}, {as_str(rider.rider_country_code)});\n")
+                f"INSERT INTO Rider VALUES ({rider.bib}, {as_str(rider.team)}, {as_str(rider.rider)}, {as_str(rider.dob)});\n")
+
+        f.write("\n\n")
+
+
+def write_rider_from_data(file, data):
+    rider_from = data[['bib', 'rider_country_code']].drop_duplicates().dropna(
+        subset=['rider_country_code']).reset_index(drop=True)
+    with open(file, 'a') as f:
+        f.write("-- Insert Rider_From Data\n")
+        for rf in rider_from.itertuples(index=False):
+            f.write(
+                f"INSERT INTO Rider_From VALUES ({rf.bib}, {as_str(rf.rider_country_code)});\n")
+
+        f.write("\n\n")
+
+
+def write_member_of_data(file, data):
+    member_of = data[['bib', 'team']].drop_duplicates().reset_index(drop=True)
+    with open(file, 'a') as f:
+        f.write("-- Insert Member_Of Data\n")
+        for mo in member_of.itertuples(index=False):
+            f.write(
+                f"INSERT INTO Member_Of VALUES ({mo.bib}, {as_str(mo.team)});\n")
 
         f.write("\n\n")
 
@@ -170,6 +193,7 @@ if __name__ == "__main__":
     write_country_data(OUTPUT_FILE, data)
     write_team_data(OUTPUT_FILE, data)
     write_rider_data(OUTPUT_FILE, data)
+    write_rider_from_data(OUTPUT_FILE, data)
     write_location_data(OUTPUT_FILE, data)
     write_stage_type(OUTPUT_FILE, data)
     write_stage_data(OUTPUT_FILE, data)
