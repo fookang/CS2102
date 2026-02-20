@@ -4282,7 +4282,7 @@ INSERT INTO Rider_Exit VALUES (175, 20, 'DNS');
 -- Query to find the name of the rider who did not exit the race and has 
 -- the smallest cumulative adjusted time in the competition
 
-SELECT r.name, (res.time + res.penalty - res.bonus) as adjusted_time
+SELECT r.name, SUM(res.time + res.penalty - res.bonus) as adjusted_time
 FROM Result res
 JOIN Rider r ON r.bib = res.bib
 WHERE NOT EXISTS (
@@ -4290,5 +4290,6 @@ WHERE NOT EXISTS (
     FROM Rider_Exit re
     WHERE re.rider = res.bib
 )
+GROUP BY r.name
 ORDER BY adjusted_time ASC
 LIMIT 1;
