@@ -4286,7 +4286,7 @@ SELECT r.name, SUM(res.time + res.penalty - res.bonus) as adjusted_time
 FROM Result res
 JOIN Rider r ON r.bib = res.bib
 WHERE NOT EXISTS (
-    SELECT 1
+    SELECT *
     FROM Rider_Exit re
     WHERE re.rider = res.bib
 )
