@@ -848,3 +848,21 @@ DO $$ BEGIN
 END $$;
 ROLLBACK;
 
+-- Test case 19
+-- Constraint tested: two consecutive rest days are not allowed by updating en existing stage
+-- Expected: The update should fail
+BEGIN;
+DO $$ BEGIN
+    BEGIN
+		-- Fill all the rest days with valid stages first
+        INSERT INTO stages VALUES (22, '2025-07-13', 'Thoiry', 'Paris Champs-�lys�es', 130, 'flat');
+        INSERT INTO stages VALUES (23, '2025-07-20', 'Thoiry', 'Paris Champs-�lys�es', 130, 'flat');
+        -- Update a stage in a way that creates two consecutive rest days
+        UPDATE stages SET day = '2025-07-28' WHERE num = 21;
+        SET CONSTRAINTS ALL IMMEDIATE;
+        RAISE NOTICE 'Test case 19 failed: Update creating two consecutive rest days succeeded when it should have failed';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Test case 19 passed: %', SQLERRM;
+    END;
+END $$;
+ROLLBACK;
