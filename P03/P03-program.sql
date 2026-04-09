@@ -15,12 +15,13 @@ DECLARE
   min_rank INTEGER;
   result_count INTEGER;
   active_riders INTEGER;
+  distinct_rank_count INTEGER;
 BEGIN
 
   -- Get the count of results for the stage, and the minimum and maximum rank for the stage
-  SELECT COUNT(*), MIN(rank), MAX(rank)
-  INTO result_count, min_rank, max_rank
-  FROM results
+  SELECT COUNT(*), MIN(r.rank), MAX(r.rank), COUNT(DISTINCT r.rank)
+  INTO result_count, min_rank, max_rank, distinct_rank_count
+  FROM results r
   WHERE stage = NEW.stage;
 
   -- Get the count of active riders for the stage
@@ -32,6 +33,11 @@ BEGIN
     FROM riders_exits re
     WHERE re.stage <= NEW.stage
   );
+
+  -- Ranks should be unique for each stage
+  IF distinct_rank_count <> result_count THEN
+    RAISE EXCEPTION 'Ranks must be unique for each stage';
+  END IF;
 
   -- Ranks should start from 1
   IF min_rank IS NOT NULL AND min_rank <> 1 THEN
@@ -50,9 +56,9 @@ BEGIN
 
   -- Check old results for the stage to ensure that the new rank does not create gaps
   IF TG_OP = 'UPDATE' AND NEW.stage <> OLD.stage THEN
-    SELECT COUNT(*), MIN(rank), MAX(rank)
-    INTO result_count, min_rank, max_rank
-    FROM results
+    SELECT COUNT(*), MIN(r.rank), MAX(r.rank), COUNT(DISTINCT r.rank)
+    INTO result_count, min_rank, max_rank, distinct_rank_count
+    FROM results r
     WHERE stage = OLD.stage;
 
     SELECT COUNT(*)
@@ -63,6 +69,9 @@ BEGIN
       FROM riders_exits re
       WHERE re.stage <= OLD.stage
     );
+    IF distinct_rank_count <> result_count THEN
+      RAISE EXCEPTION 'Update would violate unique ranks constraint: ranks must be unique for each stage';
+    END IF;
 
     IF min_rank IS NOT NULL AND min_rank <> 1 THEN
       RAISE EXCEPTION 'Update would violate minimum rank constraint: minimum rank must be equal to 1';
@@ -97,19 +106,6 @@ BEGIN
     RAISE EXCEPTION 'Ranks must agree with race time: if a rider has a better rank than another rider, then their race time must be less than or equal to that of the other rider';
   END IF;
 
-  IF TG_OP = 'UPDATE' AND NEW.stage <> OLD.stage THEN
-    IF EXISTS (
-      SELECT 1
-      FROM results r1
-      JOIN results r2 
-      ON r1.stage = r2.stage
-      WHERE r1.stage = OLD.stage
-        AND r1.rank < r2.rank
-        AND r1.time > r2.time
-    ) THEN
-      RAISE EXCEPTION 'Update would violate time-rank consistency: if a rider has a better rank than another rider, then their race time must be less than or equal to that of the other rider';
-    END IF;
-  END IF;
   RETURN NEW;
 END
 $$ LANGUAGE plpgsql;
@@ -120,10 +116,10 @@ RETURNS TRIGGER AS $$
 DECLARE
   exit_stage INTEGER;
 BEGIN
-  SELECT stage
+  SELECT re.stage
   INTO exit_stage
-  FROM riders_exits
-  WHERE rider = NEW.rider;
+  FROM riders_exits re
+  WHERE re.rider = NEW.rider;
 
   IF exit_stage IS NULL THEN
     RETURN NEW;
